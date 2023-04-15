@@ -16,6 +16,14 @@ public:
     string directory;
     bool gammaCorrection;
 
+    //Physics for GLSL
+    struct PhysicsObject {
+        vec3 position;
+        vec3 velocity;
+        vec3 acceleration;
+        float mass;
+    };
+
     // constructor, expects a filepath to a 3D model.
     Model(string const& path, bool gamma = false) : gammaCorrection(gamma)
     {
