@@ -1,5 +1,6 @@
 #ifndef MODEL_H
 #define MODEL_H
+#define GRAVITY 9.81
 
 #include "libraries.h"
 #include "Shader.h"
@@ -16,13 +17,46 @@ public:
     string directory;
     bool gammaCorrection;
 
-    //Physics for GLSL
+    vec3 acceleration = vec3(0.0, -GRAVITY, 0.0);
+
+    // Physics calculations for a single object
     struct PhysicsObject {
         vec3 position;
         vec3 velocity;
         vec3 acceleration;
+        float radius;
         float mass;
     };
+
+    // Update the position and velocity of a physics object
+    void updatePhysicsObject(PhysicsObject* obj, float dt) {
+        vec3 force = obj->mass * obj->acceleration;
+        vec3 acceleration = force / obj->mass;
+        obj->velocity += acceleration * dt;
+        obj->position += obj->velocity * dt;
+    }
+
+    // Apply gravity to a physics object
+    void applyGravity(PhysicsObject* obj) {
+        obj->acceleration += acceleration;
+    }
+
+    // Detect and resolve collisions between two physics objects
+    /*
+    void resolveCollision(PhysicsObject* obj1, PhysicsObject* obj2) {
+        //float distance = distance(obj1->position, obj2->position);
+        if (distance < obj1->radius + obj2->radius) {
+            vec3 normal = normalize(obj1->position - obj2->position);
+            vec3 relativeVelocity = obj1->velocity - obj2->velocity;
+            float relativeSpeed = dot(normal, relativeVelocity);
+            if (relativeSpeed < 0.0) {
+                vec3 impulse = -(1.0 + obj1->restitution) * relativeSpeed * normal / (1.0 / obj1->mass + 1.0 / obj2->mass);
+                obj1->velocity += impulse / obj1->mass;
+                obj2->velocity -= impulse / obj2->mass;
+            }
+        }
+    }
+    */
 
     // constructor, expects a filepath to a 3D model.
     Model(string const& path, bool gamma = false) : gammaCorrection(gamma)

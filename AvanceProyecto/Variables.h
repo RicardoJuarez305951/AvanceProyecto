@@ -1,6 +1,6 @@
 
-unsigned int w = 800;
-unsigned int h = 600;
+unsigned int w = 1200;
+unsigned int h = 1200;
 int s_w = w;
 int s_h = h;
 int s_Xpos = 0;
